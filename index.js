@@ -26,11 +26,12 @@ server.post('/get-movie-details', (req, res) => {
             let dataToSend = movieToSearch === 'The Godfather' ? `I don't have the required info on that. Here's some info on 'The Godfather' instead.\n` : '';
             dataToSend += `${movie.Title} is a ${movie.Actors} starer ${movie.Genre} movie, released in ${movie.Year}. It was directed by ${movie.Director}`;
              res.setHeader('Content-Type', 'application/json');
-             return res.json({
-                speech : 'chintan bots',
-                displayText : 'chintan congratulations!!',
-                source: 'get-movie-details' 
-             }); 
+            let responseObj = (
+                "fulfillmentText" : "chintan"
+                "fulfillmentMessages": [],
+                "source": "get-movie-details"
+            );
+             return res.json(responseObj); 
         });
     }, (error) => {
         return res.json({
