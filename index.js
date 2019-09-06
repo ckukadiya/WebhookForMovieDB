@@ -13,8 +13,25 @@ server.use(bodyParser.urlencoded({
 server.use(bodyParser.json());
 
 server.post('/get-movie-details', (req, res) => {
+    const agent = new WebhookClient({ request, response });
+    console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
+    console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
-    const movieToSearch = req.body.result && req.body.result.parameters && req.body.result.parameters.movie ? req.body.result.parameters.movie : 'The Godfather';
+    function welcome(agent) {
+        agent.add(`Welcome to my agent!`);
+    }
+
+    function fallback(agent) {
+        agent.add(`I didn't understand`);
+        agent.add(`I'm sorry, can you try again?`);
+    }
+    let intentMap = new Map();
+    intentMap.set('Default Welcome Intent', welcome);
+    intentMap.set('Default Fallback Intent', fallback);
+    // intentMap.set('your intent name here', yourFunctionHandler);
+    // intentMap.set('your intent name here', googleAssistantHandler);
+    agent.handleRequest(intentMap);
+    /*const movieToSearch = req.body.result && req.body.result.parameters && req.body.result.parameters.movie ? req.body.result.parameters.movie : 'The Godfather';
     const reqUrl = encodeURI(`http://www.omdbapi.com/?t=${movieToSearch}&apikey=${API_KEY}`);
     http.get(reqUrl, (responseFromAPI) => {
         let completeResponse = '';
@@ -30,7 +47,7 @@ server.post('/get-movie-details', (req, res) => {
                 speech : 'chintan bots',
                 displayText : 'chintan congratulations!!',
                 source: 'get-movie-details'
-            }); 
+            });
         });
     }, (error) => {
         return res.json({
@@ -38,7 +55,7 @@ server.post('/get-movie-details', (req, res) => {
             displayText: 'Something went wrong!',
             source: 'get-movie-details'
         });
-    });
+    });*/
 });
 
 server.listen((process.env.PORT || 8000), () => {
